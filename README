@@ -1,0 +1,10 @@
+OSCRecordTools - Tools for sniffing and forwarding / replaying OSC streams
+(C) Carles F. Julià <carles.fernandez@upf.edu>
+These programs are under the GNU/GPLv3 license. See LICENSE for more info.
+
+
+StoreOsc.py - Create a file with the OSC stream sniffed in localhost:3333
+CopyOsc.py  - Duplicate the OSC stream in localhost:3333
+PlayOsc     - Replay an OSC stream recorded with StoreOsc.py
+
+This tools were created to help debugging TUIO applications.
