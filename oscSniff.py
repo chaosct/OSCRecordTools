@@ -3,13 +3,12 @@ from pcapy import open_live
 from threading import Thread
 import impacket
 from impacket.ImpactDecoder import EthDecoder, LinuxSLLDecoder
-import OSC
 
 addressManager = 0 
 oscThread = 0
 
 class OSCServer(Thread) :
-    def __init__(self, dev='any', port = 3333, ignoreIp = None) :
+    def __init__(self, callback, dev='any', port = 3333, ignoreIp = None) :
         Thread.__init__(self)
         DEV          = dev  # interface to listen on
 	MAX_LEN      = 1514    # max size of packet to capture
@@ -21,7 +20,7 @@ class OSCServer(Thread) :
 	if ignoreIp:
 		myfilter+=' and not dst host '+ignoreIp
 	self.p.setfilter(myfilter)
-	self.callback = addressManager.handle
+	self.callback = callback
 	self.packets = 0
 	datalink = self.p.datalink()
         if pcapy.DLT_EN10MB == datalink:
@@ -41,45 +40,5 @@ class OSCServer(Thread) :
     def run(self) :
     	self.p.loop(self.MAX_PKTS,self.ph)
 
-def init() :
-    """ instantiates address manager and outsocket as globals
-    """
-    global addressManager
-    addressManager = OSC.CallbackManager()
 
-
-def listen(dev='any', port = 3333) :
-    """  creates a new thread listening to that port 
-    defaults to ipAddr='127.0.0.1', port 9001
-    """
-    global oscThread
-    oscThread = OSCServer( dev, port )
-    oscThread.start()
-
-def bind(func, oscaddress):
-    """ bind given oscaddresses with given functions in address manager
-    """
-    addressManager.add(func, oscaddress) 
-    
-def dontListen() :
-    pass
-    
-if __name__ == '__main__':
-    # example of how to use oscAPI
-    init()
-    listen() # defaults to "127.0.0.1", 9001
-
-    # add addresses to callback manager
-    def printStuff(msg):
-        """deals with "print" tagged OSC addresses
-        """
-        print "printing in the printStuff function ", msg
-        print "the oscaddress is ", msg[0]
-        print "the value is ", msg[2]
-
-    #bind(printStuff, "/test")
-
-    
-
-    #dontListen()  # finally close the connection bfore exiting or program
 

@@ -26,9 +26,7 @@ def main(port=3333):
         exit(0)
     filename = sys.argv[1]
     sender = FileDumper(filename)
-    oscSniff.init()
-    oscserver = oscSniff.OSCServer()
-    oscserver.callback = sender.send
+    oscserver = oscSniff.OSCServer(sender.send)
     oscserver.start()
     try:
 	    while 1:

@@ -20,9 +20,7 @@ class Sender(object):
 
 def main(host,port=3333):
 	sender = Sender(host,port)
-	oscSniff.init()
-	oscserver = oscSniff.OSCServer(ignoreIp=host)
-	oscserver.callback = sender.send
+	oscserver = oscSniff.OSCServer(sender.send,ignoreIp=host)
 	oscserver.start()
 	try:
 		while 1:
